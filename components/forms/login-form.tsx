@@ -2,10 +2,7 @@
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
-
-
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form'
-
 import { LoginSchema } from '@/utils/validation/schemas/index'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button";
@@ -13,9 +10,9 @@ import CardWraper from "@/components/container/card-wrapper";
 import Social from "@/components/ui/social";
 import Link from "next/link";
 import { LoginInitialValues } from '@/utils/validation/initialValues';
-import FormSuccess from '../ui/form-success';
-import FormError from '../ui/from-error';
-
+import FormSuccess from '@/components/ui/form-success';
+import FormError from '@/components/ui/from-error';
+import { login } from '@/action/login'
 
 export default function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -24,7 +21,7 @@ export default function LoginForm() {
   })
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    console.log(values)
+    login(values)
   }
   return (
     <div className="bg-gray-700 h-full flex flex-col justify-center items-center">
