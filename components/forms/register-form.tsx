@@ -11,7 +11,7 @@ import Social from "@/components/ui/social";
 import { RegisterInitialValues } from '@/utils/validation/initialValues';
 import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
-import { signInWithCredentials, signUpWithCredentials } from '@/lib/actions/auth.actions';
+import { signUpWithCredentials } from '@/lib/actions/auth.actions';
 
 
 export default function RegisterForm() {
@@ -22,6 +22,10 @@ export default function RegisterForm() {
 
     const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
         const res = await signUpWithCredentials(values)
+
+        if (res?.success) {
+            alert('success')
+        }
     }
     return (
         <div className="bg-gray-700 h-full flex flex-col justify-center items-center">
