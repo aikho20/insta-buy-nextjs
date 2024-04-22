@@ -53,7 +53,6 @@ export async function getUserByEmail({
     email
 }: GetUserByEmailParams) {
     connectDB()
-
     const user = await User.findOne({ email }).select("-password")
 
     if (!user) {
