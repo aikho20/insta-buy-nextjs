@@ -12,7 +12,6 @@ import Link from "next/link";
 import { LoginInitialValues } from '@/utils/validation/initialValues';
 import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
-import { login } from '@/action/login'
 
 export default function LoginForm() {
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -21,7 +20,7 @@ export default function LoginForm() {
   })
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-    login(values)
+
   }
   return (
     <div className="bg-gray-700 h-full flex flex-col justify-center items-center">

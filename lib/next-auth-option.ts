@@ -6,7 +6,7 @@ import { signInWithOauth, getUserByEmail, signInWithCredentials } from "@/lib/ac
 export const nextauthOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/signin", // app/signin
+        signIn: "/login", // app/signin
         error: "/error", // app/error
     },
     providers: [
