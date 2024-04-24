@@ -25,9 +25,7 @@ export async function signInWithOauth({
     account,
     profile
 }: SignInWithOauthParams) {
-    // console.log({account, profile})
     connectDB()
-
     const user = await User.findOne({ email: profile.email })
 
     if (user) return true

@@ -6,72 +6,87 @@ import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '
 import { LoginSchema } from '@/utils/validation/schemas/index'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button";
-import CardWraper from "@/components/container/card-wrapper";
+import CardWraper from "@/components/ui/card-wrapper";
 import Social from "@/components/ui/social";
 import Link from "next/link";
 import { LoginInitialValues } from '@/utils/validation/initialValues';
 import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginForm() {
+
+interface LoginFormProps {
+
+  callbackUrl: string
+
+}
+
+export default function LoginForm({
+  callbackUrl
+}: LoginFormProps) {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const errMsg = searchParams.get("error")
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: LoginInitialValues
   })
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      callbackUrl
+    })
 
   }
   return (
-    <div className="bg-gray-700 h-full flex flex-col justify-center items-center">
-      <CardWraper headerLabel={'Welcom Back'} backButtonLabel={'Dont have an account?'} backButtonHref={'/'} footerContent={
-        <div className="w-full flex items-center justify-center flex-col">
-          <Social />
-          <Button className={'w-full mt-3'} asChild><Link href={'/'}>Dont have an account?</Link></Button>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+        <div className={'space-y-4'}>
+          <FormField control={form.control} name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Email
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder='john.doe@example.com'
+                    type={'email'} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
+            )} />
+          <FormField control={form.control} name='password'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Password
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    type={'password'} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+
+            )} />
         </div>
-      }
-      >
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
-            <div className={'space-y-4'}>
-              <FormField control={form.control} name='email'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Email
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder='john.doe@example.com'
-                        type={'email'} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
+        {errMsg && (
+          <FormError message={errMsg} />
+        )}
+        <Button type='submit' className='w-full'>Login</Button>
+        <div className='flex w-100 align-center flex-col justify-center'>
+          <Social callbackUrl={callbackUrl} />
+          <Link className='text-sm p-3' href={'/auth/register'}>Dont have an account?</Link>
+        </div>
+      </form>
+    </Form>
 
-                )} />
-              <FormField control={form.control} name='password'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Password
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type={'password'} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-
-                )} />
-            </div>
-            <FormSuccess message='' />
-            <FormError message='' />
-            <Button type='submit' className='w-full'>Login</Button>
-          </form>
-        </Form>
-      </CardWraper>
-    </div >
   );
 }

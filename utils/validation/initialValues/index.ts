@@ -8,3 +8,12 @@ export const RegisterInitialValues = {
     email: '',
     password: ''
 }
+
+export const ProfileUpdateInitialValues = {
+    name: '',
+}
+export const PasswordUpdateInitialValues = {
+    oldPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+}

@@ -6,8 +6,8 @@ import { signInWithOauth, getUserByEmail, signInWithCredentials } from "@/lib/ac
 export const nextauthOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/login", // app/signin
-        error: "/error", // app/error
+        signIn: "/auth/login", // app/signin
+        error: "/auth/login", // app/error
     },
     providers: [
         GoogleProvider({
@@ -25,12 +25,15 @@ export const nextauthOptions: NextAuthOptions = {
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
-
                 const user = await signInWithCredentials({
                     email: credentials?.email,
                     password: credentials?.password
                 })
-
+                if (user.error) {
+                    return {
+                        error: user.error
+                    }
+                }
                 // console.log({user})
                 return user
             }

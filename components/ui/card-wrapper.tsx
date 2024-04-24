@@ -17,7 +17,7 @@ export default function CardWraper({ children,
   footerContent
 }: CardWraperProps) {
   return (
-    <Card className="w-[400px] shadow-md">
+    <Card className="">
       <CardHeader>
         <Header title={'Auth'} label={headerLabel} />
       </CardHeader>

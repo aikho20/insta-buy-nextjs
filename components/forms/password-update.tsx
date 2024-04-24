@@ -3,98 +3,85 @@ import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '@/components/ui/form'
-import { RegisterSchema } from '@/utils/validation/schemas/index'
+import { LoginSchema, PasswordUpdateSchema, ProfileUpdateSchema } from '@/utils/validation/schemas/index'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button";
 import CardWraper from "@/components/ui/card-wrapper";
 import Social from "@/components/ui/social";
-import { RegisterInitialValues } from '@/utils/validation/initialValues';
+import Link from "next/link";
+import { PasswordUpdateInitialValues, ProfileUpdateInitialValues } from '@/utils/validation/initialValues';
 import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
-import { SignUpWithCredentialsParams } from '@/lib/actions/auth.actions';
-import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/use-toast';
-
-interface RegisterFormProps {
-    callbackUrl: string,
-    signUpWithCredentials: (values: SignUpWithCredentialsParams) => Promise<{ success?: boolean }>
-}
-
-export default function RegisterForm({ callbackUrl, signUpWithCredentials }: RegisterFormProps) {
-    const router = useRouter()
-    const { toast } = useToast()
-    const form = useForm<z.infer<typeof RegisterSchema>>({
-        resolver: zodResolver(RegisterSchema),
-        defaultValues: RegisterInitialValues
+import { signIn } from 'next-auth/react'
+import { changeUserPassword } from '@/lib/actions/auth.actions';
+export default function PasswordUpdate() {
+    const form = useForm<z.infer<typeof PasswordUpdateSchema>>({
+        resolver: zodResolver(PasswordUpdateSchema),
+        defaultValues: PasswordUpdateInitialValues
     })
 
-    const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
-        const res = await signUpWithCredentials(values)
-        if (res?.success) {
-            toast({
-                title: "Sign up successfull",
-                description: "Please go to login page to sign in",
-            })
-        } else {
-            router.push('/auth/register')
-        }
+    const onSubmit = async (values: z.infer<typeof PasswordUpdateSchema>) => {
+        const res = await changeUserPassword({
+            oldPassword: values.oldPassword,
+            newPassword: values.newPassword
+        })
     }
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6 w-full'>
                 <div className={'space-y-4'}>
-                    <FormField control={form.control} name='name'
+                    <FormField control={form.control} name='oldPassword'
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Full Name
+                                    New Password
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        placeholder='John Doe'
+
                                     />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
 
                         )} />
-                    <FormField control={form.control} name='email'
+                    <FormField control={form.control} name='newPassword'
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Email
+                                    Old Password
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        placeholder='john.doe@example.com'
-                                        type={'email'} />
+
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
 
                         )} />
-                    <FormField control={form.control} name='password'
+                    <FormField control={form.control} name='confirmPassword'
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Password
+                                    Comfirm Password
                                 </FormLabel>
                                 <FormControl>
                                     <Input
                                         {...field}
-                                        type={'password'} />
+
+                                    />
                                 </FormControl>
                                 <FormMessage />
                             </FormItem>
 
                         )} />
                 </div>
-                <FormSuccess message='' />
-                <FormError message='' />
-                <Button type='submit' className='w-full'>Create Account</Button>
+                <Button type='submit' className='rounded-full'>Save</Button>
             </form>
-        </Form>
+        </Form >
+
     );
 }
