@@ -16,6 +16,7 @@ export default withAuth(
         if (pathname.startsWith("/dashboard") && token?.role !== "admin") {
             return NextResponse.redirect(`${origin}/unauthorized`)
         }
+
     },
     {
         callbacks: {

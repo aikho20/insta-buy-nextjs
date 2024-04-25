@@ -38,7 +38,7 @@ export default function ProfileUpdateForm() {
                                         {...field}
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />

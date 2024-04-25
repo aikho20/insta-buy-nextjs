@@ -55,7 +55,7 @@ export default function RegisterForm({ callbackUrl, signUpWithCredentials }: Reg
                                         placeholder='John Doe'
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />
@@ -71,7 +71,7 @@ export default function RegisterForm({ callbackUrl, signUpWithCredentials }: Reg
                                         placeholder='john.doe@example.com'
                                         type={'email'} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />
@@ -86,7 +86,7 @@ export default function RegisterForm({ callbackUrl, signUpWithCredentials }: Reg
                                         {...field}
                                         type={'password'} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />

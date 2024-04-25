@@ -22,7 +22,7 @@ const Header = () => {
     const { data: session, status } = useSession()
     return (
         <div className='flex flex-row w-full px-5 py-2 items-center justify-between sticky top-0 left-0 bg-white z-10 shadow-md'>
-            <p className='text-primary font-semibold'>Insta Buy</p>
+            <Link className='text-primary font-semibold' href={'/'}>Insta Buy</Link>
             <p className='text-primary'>Location</p>
 
 

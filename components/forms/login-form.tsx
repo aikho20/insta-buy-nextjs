@@ -1,4 +1,5 @@
 'use client'
+
 import * as z from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +15,7 @@ import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation';
+import SubmitButton from '../custom-button/submit-button';
 
 
 interface LoginFormProps {
@@ -57,7 +59,7 @@ export default function LoginForm({
                     placeholder='john.doe@example.com'
                     type={'email'} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className='text-xs' />
               </FormItem>
 
             )} />
@@ -72,7 +74,7 @@ export default function LoginForm({
                     {...field}
                     type={'password'} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className='text-xs' />
               </FormItem>
 
             )} />
@@ -80,7 +82,7 @@ export default function LoginForm({
         {errMsg && (
           <FormError message={errMsg} />
         )}
-        <Button type='submit' className='w-full'>Login</Button>
+        <SubmitButton title={'Login'} />
         <div className='flex w-100 align-center flex-col justify-center'>
           <Social callbackUrl={callbackUrl} />
           <Link className='text-sm p-3' href={'/auth/register'}>Dont have an account?</Link>

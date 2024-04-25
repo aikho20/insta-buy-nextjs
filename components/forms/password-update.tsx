@@ -42,7 +42,7 @@ export default function PasswordUpdate() {
 
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />
@@ -58,7 +58,7 @@ export default function PasswordUpdate() {
 
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />
@@ -74,7 +74,7 @@ export default function PasswordUpdate() {
 
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className='text-xs' />
                             </FormItem>
 
                         )} />
