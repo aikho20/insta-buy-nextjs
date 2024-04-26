@@ -14,14 +14,25 @@ import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
 import { signIn } from 'next-auth/react'
 import { updateUserProfile } from '@/lib/actions/auth.actions';
+import { useToast } from '@/hooks/use-toast';
+import { useUpdateProfileMutation } from '@/store/action/accountAction';
+
 export default function ProfileUpdateForm() {
+    const { toast } = useToast()
+    const [updateProfile, { isLoading, data }] = useUpdateProfileMutation()
     const form = useForm<z.infer<typeof ProfileUpdateSchema>>({
         resolver: zodResolver(ProfileUpdateSchema),
         defaultValues: ProfileUpdateInitialValues
     })
 
     const onSubmit = async (values: z.infer<typeof ProfileUpdateSchema>) => {
-        await updateUserProfile(values)
+        const res = await updateProfile({ name: values.name }).unwrap()
+        if (res.message) {
+            toast({
+                description: 'Profile Updated Successfully'
+            })
+            form.reset()
+        }
     }
     return (
         <Form {...form}>
@@ -43,7 +54,7 @@ export default function ProfileUpdateForm() {
 
                         )} />
                 </div>
-                <Button type='submit' className='rounded-full'>Save</Button>
+                <Button type='submit' className='rounded-full' disabled={isLoading}>{isLoading ? 'Saving..' : 'Save'}</Button>
             </form>
         </Form >
 

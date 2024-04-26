@@ -6,37 +6,32 @@ import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '
 import { RegisterSchema } from '@/utils/validation/schemas/index'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button";
-import CardWraper from "@/components/ui/card-wrapper";
-import Social from "@/components/ui/social";
 import { RegisterInitialValues } from '@/utils/validation/initialValues';
-import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
-import { SignUpWithCredentialsParams } from '@/lib/actions/auth.actions';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/use-toast';
+import { useRegisterMutation } from '@/store/action/authAction';
+import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction } from '@/components/ui/alert-dialog';
+import { CheckCircle } from 'lucide-react';
+import { useToggle } from '@/hooks/useToggle';
 
 interface RegisterFormProps {
     callbackUrl: string,
-    signUpWithCredentials: (values: SignUpWithCredentialsParams) => Promise<{ success?: boolean }>
+
 }
 
-export default function RegisterForm({ callbackUrl, signUpWithCredentials }: RegisterFormProps) {
+export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
+    const [register, { isLoading, data }] = useRegisterMutation()
+    const [value, toggle, setValue] = useToggle()
     const router = useRouter()
-    const { toast } = useToast()
     const form = useForm<z.infer<typeof RegisterSchema>>({
         resolver: zodResolver(RegisterSchema),
         defaultValues: RegisterInitialValues
     })
 
     const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
-        const res = await signUpWithCredentials(values)
-        if (res?.success) {
-            toast({
-                title: "Sign up successfull",
-                description: "Please go to login page to sign in",
-            })
-        } else {
-            router.push('/auth/register')
+        const res = await register(values).unwrap()
+        if (res?.message) {
+            toggle()
         }
     }
     return (
@@ -91,10 +86,34 @@ export default function RegisterForm({ callbackUrl, signUpWithCredentials }: Reg
 
                         )} />
                 </div>
-                <FormSuccess message='' />
-                <FormError message='' />
-                <Button type='submit' className='w-full'>Create Account</Button>
+                {data?.error && (
+                    <FormError message={data?.error} />
+                )}
+
+                <Button type='submit' className='w-full' disabled={isLoading}>{isLoading ? 'Creating...' : 'Create Account'}</Button>
             </form>
+
+            <AlertDialog open={value}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className='flex flex-row space-x-5 items-center'><CheckCircle className='text-emerald-500' />Successfully created your account</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Congratulations you have successfully created your account, please login to continue
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={() => toggle()}>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={async () => {
+                                setValue(false)
+                                router.push('/auth/login')
+                            }}
+                        >
+                            Continue
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </Form>
     );
 }

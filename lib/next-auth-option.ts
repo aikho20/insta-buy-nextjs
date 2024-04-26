@@ -2,6 +2,9 @@ import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { signInWithOauth, getUserByEmail, signInWithCredentials } from "@/lib/actions/auth.actions"
+import connectDB from "./db"
+import bcrypt from 'bcrypt'
+import User from "./model/user.model"
 
 export const nextauthOptions: NextAuthOptions = {
     secret: process.env.NEXTAUTH_SECRET,
@@ -21,21 +24,27 @@ export const nextauthOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password", required: true }
             },
             async authorize(credentials) {
-                // console.log(credentials)
+                connectDB()
                 if (!credentials?.email || !credentials?.password) {
                     return null
                 }
-                const user = await signInWithCredentials({
-                    email: credentials?.email,
-                    password: credentials?.password
-                })
-                if (user.error) {
-                    return {
-                        error: user.error
-                    }
+                const user = await User.findOne({ email: credentials.email })
+
+                if (!user) {
+                    throw new Error('Invalid email or password')
                 }
-                // console.log({user})
-                return user
+
+                const passwordIsValid = await bcrypt.compare(
+                    credentials.password,
+                    user.password
+                )
+
+                if (!passwordIsValid) {
+                    throw new Error('Invalid email or password')
+                }
+
+                return { ...user._doc, _id: user._id.toString() }
+
             }
         })
     ],
@@ -43,7 +52,22 @@ export const nextauthOptions: NextAuthOptions = {
         async signIn({ account, profile }) {
             // console.log({account, profile})
             if (account?.type === "oauth" && profile) {
-                return await signInWithOauth({ account, profile })
+                connectDB()
+                const user = await User.findOne({ email: profile.email })
+
+                if (user) return true
+
+                const newUser = new User({
+                    name: profile.name,
+                    email: profile.email,
+                    image: profile.image,
+                    provider: account.provider
+                })
+
+                // console.log(newUser)
+                await newUser.save()
+
+                return true
             }
             return true
         },
@@ -54,12 +78,14 @@ export const nextauthOptions: NextAuthOptions = {
                 token.name = session.name
             } else {
                 if (token.email) {
-                    const user = await getUserByEmail({ email: token.email })
-                    // console.log({user})
-                    token.name = user.name
-                    token._id = user._id
-                    token.role = user.role
-                    token.provider = user.provider
+                    connectDB()
+                    const user = await User.findOne({ email: token.email }).select("-password")
+                    if (user) {
+                        token.name = user.name
+                        token._id = user._id
+                        token.role = user.role
+                        token.provider = user.provider
+                    }
                 }
             }
             return token

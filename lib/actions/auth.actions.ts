@@ -92,44 +92,6 @@ export async function updateUserProfile({
     }
 }
 
-export interface SignUpWithCredentialsParams {
-    name: string,
-    email: string,
-    password: string
-}
-
-export async function signUpWithCredentials({
-    name,
-    email,
-    password
-}: SignUpWithCredentialsParams) {
-    connectDB()
-
-    try {
-        const user = await User.findOne({ email })
-
-        if (user) {
-            throw new Error("User already exists.")
-        }
-
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
-
-        const newUser = new User({
-            name,
-            email,
-            password: hashedPassword
-        })
-
-        // console.log({newUser})
-        await newUser.save()
-
-        return { success: true }
-    } catch (error) {
-        redirect(`/error?error=${(error as Error).message}`)
-    }
-}
-
 interface SignInWithCredentialsParams {
     email: string,
     password: string
@@ -139,23 +101,7 @@ export async function signInWithCredentials({
     email,
     password
 }: SignInWithCredentialsParams) {
-    connectDB()
-    const user = await User.findOne({ email })
 
-    if (!user) {
-        throw new Error("Invalid email or password!")
-    }
-
-    const passwordIsValid = await bcrypt.compare(
-        password,
-        user.password
-    )
-
-    if (!passwordIsValid) {
-        throw new Error("Invalid email or password")
-    }
-
-    return { ...user._doc, _id: user._id.toString() }
 }
 
 export interface ChangeUserPasswordParams {

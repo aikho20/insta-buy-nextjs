@@ -11,6 +11,14 @@ const nextConfig = {
     env: {
         GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET, MONGODB_URI, NEXTAUTH_URL
     },
+    images: {
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**",
+            },
+        ],
+    },
 
 };
 

@@ -10,21 +10,34 @@ import CardWraper from "@/components/ui/card-wrapper";
 import Social from "@/components/ui/social";
 import Link from "next/link";
 import { PasswordUpdateInitialValues, ProfileUpdateInitialValues } from '@/utils/validation/initialValues';
-import FormSuccess from '@/components/ui/form-success';
-import FormError from '@/components/ui/from-error';
-import { signIn } from 'next-auth/react'
-import { changeUserPassword } from '@/lib/actions/auth.actions';
+import { useUpdatePasswordMutation } from '@/store/action/accountAction';
+import { useToast } from '@/hooks/use-toast';
+
 export default function PasswordUpdate() {
+    const { toast } = useToast()
+    const [updatePassword, { isLoading }] = useUpdatePasswordMutation()
     const form = useForm<z.infer<typeof PasswordUpdateSchema>>({
         resolver: zodResolver(PasswordUpdateSchema),
         defaultValues: PasswordUpdateInitialValues
     })
 
     const onSubmit = async (values: z.infer<typeof PasswordUpdateSchema>) => {
-        const res = await changeUserPassword({
+        const res = await updatePassword({
             oldPassword: values.oldPassword,
             newPassword: values.newPassword
-        })
+        }).unwrap()
+        if (res?.message) {
+            toast({
+                description: res.message
+            })
+            form.reset()
+        } else {
+            toast({
+                variant: 'destructive',
+                description: res.error
+            })
+        }
+
     }
     return (
         <Form {...form}>
@@ -34,7 +47,7 @@ export default function PasswordUpdate() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    New Password
+                                    Old Password
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -50,7 +63,7 @@ export default function PasswordUpdate() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Old Password
+                                    New Password
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -79,7 +92,7 @@ export default function PasswordUpdate() {
 
                         )} />
                 </div>
-                <Button type='submit' className='rounded-full'>Save</Button>
+                <Button type='submit' className='rounded-full' disabled={isLoading}>{isLoading ? 'Saving...' : 'Save'}</Button>
             </form>
         </Form >
 

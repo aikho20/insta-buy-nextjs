@@ -13,9 +13,9 @@ import Link from "next/link";
 import { LoginInitialValues } from '@/utils/validation/initialValues';
 import FormSuccess from '@/components/ui/form-success';
 import FormError from '@/components/ui/from-error';
-import { signIn } from 'next-auth/react'
+import { signIn, useSession, } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation';
-import SubmitButton from '../custom-button/submit-button';
+import { useLoginMutation } from '@/store/action/authAction';
 
 
 interface LoginFormProps {
@@ -27,9 +27,11 @@ interface LoginFormProps {
 export default function LoginForm({
   callbackUrl
 }: LoginFormProps) {
-  const router = useRouter()
+
   const searchParams = useSearchParams()
-  const errMsg = searchParams.get("error")
+  const { status } = useSession()
+  const error = searchParams.get('error')
+
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: LoginInitialValues
@@ -79,10 +81,11 @@ export default function LoginForm({
 
             )} />
         </div>
-        {errMsg && (
-          <FormError message={errMsg} />
+        {error && (
+          <FormError message={error} />
         )}
-        <SubmitButton title={'Login'} />
+
+        <Button type='submit' className='w-full' disabled={status === 'loading'}>{status === 'loading' ? 'Loading...' : 'Login'}</Button>
         <div className='flex w-100 align-center flex-col justify-center'>
           <Social callbackUrl={callbackUrl} />
           <Link className='text-sm p-3' href={'/auth/register'}>Dont have an account?</Link>

@@ -4,6 +4,8 @@ import "./globals.css";
 import AuthProvider from "@/providers/auth-provider";
 import Header from "@/components/shared/header";
 import { Toaster } from "@/components/ui/toaster";
+import { Provider } from "react-redux";
+import StoreProvider from "@/providers/store-provider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,12 +24,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <Header />
-
-          <div className="my-5">
-            {children}
-          </div>
-          <Toaster />
+          <StoreProvider>
+            <Header />
+            <div className="my-5">
+              {children}
+            </div>
+            <Toaster />
+          </StoreProvider>
         </AuthProvider>
       </body>
     </html >

@@ -17,6 +17,7 @@ import Link from 'next/link'
 import { PersonIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import { Skeleton } from '@/components/ui/skeleton'
+import Image from 'next/image'
 const Header = () => {
     const router = useRouter()
     const { data: session, status } = useSession()
@@ -25,17 +26,17 @@ const Header = () => {
             <Link className='text-primary font-semibold' href={'/'}>Insta Buy</Link>
             <p className='text-primary'>Location</p>
 
-
             <div className='flex flex-row space-x-3 hidden md:flex'>
                 {status === 'loading' ? (
                     <Skeleton className="w-[100px] h-[40px] rounded-full" />
                 ) : (
                     <>
                         {status === 'authenticated' ? (
+
                             <DropdownMenu>
                                 <DropdownMenuTrigger className='flex flex-row px-2 py-2 items-center'><PersonIcon className='h-5 w-5' />{session?.user?.name}</DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                    <DropdownMenuItem onClick={() => router.push('/auth/profile')}>Profile</DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => router.push('/account/profile')}>Profile</DropdownMenuItem>
                                     <DropdownMenuItem onClick={() => { signOut() }}>Signout</DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
