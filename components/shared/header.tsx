@@ -24,7 +24,6 @@ const Header = () => {
     return (
         <div className='flex flex-row w-full px-5 py-2 items-center justify-between sticky top-0 left-0 bg-white z-10 shadow-md'>
             <Link className='text-primary font-semibold' href={'/'}>Insta Buy</Link>
-            <p className='text-primary'>Location</p>
 
             <div className='flex flex-row space-x-3 hidden md:flex'>
                 {status === 'loading' ? (

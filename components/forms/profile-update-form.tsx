@@ -6,20 +6,13 @@ import { Form, FormField, FormItem, FormLabel, FormMessage, FormControl } from '
 import { LoginSchema, ProfileUpdateSchema } from '@/utils/validation/schemas/index'
 import { Input } from '@/components/ui/input'
 import { Button } from "@/components/ui/button";
-import CardWraper from "@/components/ui/card-wrapper";
-import Social from "@/components/ui/social";
-import Link from "next/link";
 import { ProfileUpdateInitialValues } from '@/utils/validation/initialValues';
-import FormSuccess from '@/components/ui/form-success';
-import FormError from '@/components/ui/from-error';
-import { signIn } from 'next-auth/react'
-import { updateUserProfile } from '@/lib/actions/auth.actions';
 import { useToast } from '@/hooks/use-toast';
 import { useUpdateProfileMutation } from '@/store/action/accountAction';
 
 export default function ProfileUpdateForm() {
     const { toast } = useToast()
-    const [updateProfile, { isLoading, data }] = useUpdateProfileMutation()
+    const [updateProfile, { isLoading }] = useUpdateProfileMutation()
     const form = useForm<z.infer<typeof ProfileUpdateSchema>>({
         resolver: zodResolver(ProfileUpdateSchema),
         defaultValues: ProfileUpdateInitialValues
@@ -27,11 +20,16 @@ export default function ProfileUpdateForm() {
 
     const onSubmit = async (values: z.infer<typeof ProfileUpdateSchema>) => {
         const res = await updateProfile({ name: values.name }).unwrap()
-        if (res.message) {
+        if (res?.message) {
             toast({
-                description: 'Profile Updated Successfully'
+                description: res.message
             })
             form.reset()
+        } else {
+            toast({
+                variant: 'destructive',
+                description: res.error
+            })
         }
     }
     return (

@@ -22,3 +22,12 @@ export const PasswordUpdateSchema = z.object({
     newPassword: z.string().min(1, ({ message: 'New Password is required' })),
     confirmPassword: z.string().min(1, ({ message: 'New Password is required' }))
 })
+
+export const ProductSchema = z.object({
+    images: z.array(z.string()).min(1, ({ message: 'Images are required' })),
+    productName: z.string().min(1, ({ message: 'Product name is required' })),
+    description: z.string().min(1, ({ message: 'Description is required' })),
+    price: z.coerce.number().min(1, ({ message: 'Old Password is required' })),
+    discount: z.coerce.number().min(1, ({ message: 'Discount is required' })),
+    quantity: z.coerce.number().min(1, ({ message: 'Quantity is required' })),
+})

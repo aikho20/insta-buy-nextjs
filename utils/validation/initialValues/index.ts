@@ -17,3 +17,12 @@ export const PasswordUpdateInitialValues = {
     newPassword: '',
     confirmPassword: ''
 }
+
+export const ProductInitialValue = {
+    images: [],
+    productName: "",
+    description: "",
+    price: 0,
+    discount: 0,
+    quantity: 0,
+}

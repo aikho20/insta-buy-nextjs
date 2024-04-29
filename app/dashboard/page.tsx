@@ -2,6 +2,8 @@ import Image from "next/image";
 
 export default function Dashboard() {
   return (
-    <p>Dashboard</p>
+    <div className="p-4 text-3xl font-bold">
+      <p>Welcome to Dashboard</p>
+    </div>
   );
 }

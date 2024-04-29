@@ -1,7 +1,6 @@
 import { NextAuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { signInWithOauth, getUserByEmail, signInWithCredentials } from "@/lib/actions/auth.actions"
 import connectDB from "./db"
 import bcrypt from 'bcrypt'
 import User from "./model/user.model"

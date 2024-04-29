@@ -18,7 +18,7 @@ interface RegisterFormProps {
     callbackUrl: string,
 }
 
-export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
+export default function MerchantRegistrationForm({ callbackUrl }: RegisterFormProps) {
     const [register, { isLoading, data }] = useRegisterMutation()
     const [value, toggle, setValue] = useToggle()
     const router = useRouter()
@@ -28,7 +28,7 @@ export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
     })
 
     const onSubmit = async (values: z.infer<typeof RegisterSchema>) => {
-        const res = await register(values).unwrap()
+        const res = await register({ ...values, role: 'admin' }).unwrap()
         if (res?.message) {
             toggle()
         }
@@ -41,7 +41,7 @@ export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    Full Name
+                                    Store Name
                                 </FormLabel>
                                 <FormControl>
                                     <Input
@@ -89,7 +89,7 @@ export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
                     <FormError message={data?.error} />
                 )}
 
-                <Button type='submit' className='w-full' disabled={isLoading}>{isLoading ? 'Creating...' : 'Create Account'}</Button>
+                <Button type='submit' className='w-full' disabled={isLoading}>{isLoading ? 'Creating...' : 'Create store'}</Button>
             </form>
 
             <AlertDialog open={value}>
@@ -97,7 +97,7 @@ export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
                     <AlertDialogHeader>
                         <AlertDialogTitle className='flex flex-row space-x-5 items-center'><CheckCircle className='text-emerald-500' />Successfully created your account</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Congratulations you have successfully created your account, please login to continue
+                            Congratulations you have successfully created your Store, please login to continue
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -105,7 +105,7 @@ export default function RegisterForm({ callbackUrl }: RegisterFormProps) {
                         <AlertDialogAction
                             onClick={async () => {
                                 setValue(false)
-                                router.push('/auth/login')
+                                router.push('/auth/merchant-login')
                             }}
                         >
                             Continue
