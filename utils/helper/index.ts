@@ -1,10 +1,12 @@
-export const fileBase64 = (img: any) => {
+export const fileBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
-        let fileReader = new FileReader();
-        fileReader.onerror = reject
-        fileReader.onload = function () {
-            resolve(fileReader.result)
-        }
-        fileReader.readAsDataURL(img)
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result as string);
+        };
+        reader.onerror = (error) => {
+            reject(error);
+        };
+        reader.readAsDataURL(file);
     })
 }

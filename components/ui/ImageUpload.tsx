@@ -13,10 +13,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ name }) => {
 
     const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const files = e.target.files;
-            const base64Files = await Promise.all(Array.from(files).map(fileBase64));
-            setValue(name, base64Files);
-            setPreviews(base64Files);
+            try {
+                const files = e.target.files;
+                const base64Files = await Promise.all(Array.from(files).map(fileBase64));
+                setValue(name, base64Files);
+                setPreviews(base64Files);
+            } catch (error: any) {
+                console.error("Error converting files to Base64:", error);
+            }
         }
     };
 
@@ -28,7 +32,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ name }) => {
                 <div>
                     <Input type="file" multiple onChange={handleChange} />
                     <div className="mt-2 flex flex-wrap gap-2">
-                        {previews.map((src, index) => (
+                        {previews?.map((src, index) => (
                             <img
                                 key={index}
                                 src={src}
