@@ -8,7 +8,7 @@ interface RegisterProps {
     callbackUrl: string,
 }
 
-export default function MerchangRegistration({ callbackUrl }: RegisterProps) {
+export default function MerchantRegistration({ callbackUrl }: RegisterProps) {
     const router = useRouter()
     const { data: session } = useSession()
     useEffect(() => {
