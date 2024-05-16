@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 interface RegisterProps {
-    callbackUrl: string,
+    searchParams: {
+        callbackUrl: string
+    }
 }
 
-export default function MerchantRegistration({ callbackUrl }: RegisterProps) {
+export default function MerchantRegistration({ searchParams: { callbackUrl } }: RegisterProps) {
     const router = useRouter()
     const { data: session } = useSession()
     useEffect(() => {
