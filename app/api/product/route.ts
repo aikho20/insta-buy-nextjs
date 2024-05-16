@@ -34,7 +34,27 @@ export async function POST(req: NextRequest) {
         // console.log({newUser})
         await newProduct.save()
 
+        // Suggested code may be subject to a license. Learn more: ~LicenseLog:1492981750.
         return NextResponse.json({ message: 'Successfully added!' }, { status: 200 })
+
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+}
+
+export async function GET() {
+
+    try {
+        connectDB()
+
+        //const { id } = await req.json();
+        const product = await Product.find({}).select("-merchant")
+        if (!product) {
+            return NextResponse.json({ message: 'No product found' }, { status: 200 })
+        }
+
+        return NextResponse.json({ product: product }, { status: 200 })
 
     } catch (error: any) {
         return NextResponse.json({ error: error.message }, { status: 500 })

@@ -15,6 +15,7 @@ import { CheckCircle } from 'lucide-react';
 import { useToggle } from '@/hooks/useToggle';
 import { fileBase64 } from '@/utils/helper';
 import { useState } from 'react';
+import ImageUpload from '@/components/ui/ImageUpload';
 
 
 export default function AddProductForm({ }) {
@@ -29,21 +30,11 @@ export default function AddProductForm({ }) {
     })
 
     const onSubmit = async (values: z.infer<typeof ProductSchema>) => {
+        console.log(values)
         const res = await addProduct(values).unwrap()
         if (res?.message) {
             toggle()
         }
-    }
-    const handleImage = (e: any) => {
-        let image = e.target.files;
-        Promise.all(Array.from(image).map(fileBase64))
-            .then((urls: any) => {
-                return urls
-            })
-            .catch((error) => {
-                return null
-                console.error(error)
-            })
     }
 
     return (
@@ -56,12 +47,7 @@ export default function AddProductForm({ }) {
                                 <FormItem>
 
                                     <FormControl>
-                                        <Input
-                                            {...field}
-                                            type="file" multiple={true} onChange={(e) => {
-                                                form.setValue('images', handleImage(e))
-                                            }}
-                                        />
+                                        <ImageUpload name='images' />
                                     </FormControl>
                                     <FormMessage className='text-xs' />
                                 </FormItem>

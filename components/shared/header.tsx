@@ -25,6 +25,11 @@ const Header = () => {
         <div className='flex flex-row w-full px-5 py-2 items-center justify-between sticky top-0 left-0 bg-white z-10 shadow-md'>
             <Link className='text-primary font-semibold' href={'/'}>Insta Buy</Link>
 
+            {session?.user.role === 'admin' && <div className='flex flex-row space-x-3'>
+                <Link className='text-primary text-md' href={'/dashboard'}>Dashboard</Link>
+                <Link className='text-primary text-md' href={'/dashboard/products'}>Products</Link>
+            </div>}
+
             <div className='flex flex-row space-x-3 hidden md:flex'>
                 {status === 'loading' ? (
                     <Skeleton className="w-[100px] h-[40px] rounded-full" />
