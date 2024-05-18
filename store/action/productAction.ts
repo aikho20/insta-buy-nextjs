@@ -11,7 +11,7 @@ interface productProps {
     quantity: number,
 }
 interface productQuery {
-    id: string
+    merchantId: string
 }
 
 
@@ -20,19 +20,20 @@ export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({     // <Type of data the call will return, Type of parameter being passed to the query function>
         addProduct: builder.mutation({
             query: ({ productName, description, price, discount, quantity, images }: productProps) => ({
-                url: '/api/product',
+                url: '/api/product/add-product',
                 method: 'POST',
                 body: { productName, description, price, discount, quantity, images },
             }),
         }),
-        getProduct: builder.query({
-            query: ({ id }: productQuery) => ({
-                url: `/api/product/${id}`,
-                method: 'GET'
+        getProduct: builder.mutation({
+            query: ({ merchantId }: productQuery) => ({
+                url: `/api/product/get-store-product`,
+                method: 'POST',
+                body: { merchantId }
             }),
         }),
 
     }),
 });
 
-export const { useAddProductMutation, useGetProductQuery } = productApi;
+export const { useAddProductMutation, useGetProductMutation } = productApi;
