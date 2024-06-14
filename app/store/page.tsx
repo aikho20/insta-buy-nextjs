@@ -36,7 +36,9 @@ export default function Store({ searchParams: { storeId } }: StoreProps) {
         <p className='text-lg text-bold'>Filters</p>
         <div className='flex flex-col gap-2 mx-2'>
           {['Drinks', 'Fries', 'Burger'].map((items, index) => (
-            <p className='text-sm cursor-pointer text-gray-600'>{items}</p>
+            <p className='text-sm cursor-pointer text-gray-600' key={index}>
+              {items}
+            </p>
           ))}
         </div>
       </div>
