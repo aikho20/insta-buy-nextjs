@@ -1,28 +1,29 @@
 export const LoginInitialValues = {
-    email: '',
-    password: ''
+  email: '',
+  password: '',
 }
 
 export const RegisterInitialValues = {
-    name: '',
-    email: '',
-    password: ''
+  name: '',
+  email: '',
+  password: '',
 }
 
 export const ProfileUpdateInitialValues = {
-    name: '',
+  name: '',
 }
 export const PasswordUpdateInitialValues = {
-    oldPassword: '',
-    newPassword: '',
-    confirmPassword: ''
+  oldPassword: '',
+  newPassword: '',
+  confirmPassword: '',
 }
 
 export const ProductInitialValue = {
-    images: [],
-    productName: "",
-    description: "",
-    price: 0,
-    discount: 0,
-    quantity: 0,
+  images: [],
+  category: '',
+  productName: '',
+  description: '',
+  price: 0,
+  discount: 0,
+  quantity: 0,
 }
