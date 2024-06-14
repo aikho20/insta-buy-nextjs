@@ -17,8 +17,15 @@ export const storeApi = apiSlice.injectEndpoints({
                 method: 'GET'
             }),
         }),
+        getStore: builder.mutation({
+            query: ({ merchantId }) => ({
+                url: `/api/store`,
+                method: 'POST',
+                body: { merchantId }
+            }),
+        }),
 
     }),
 });
 
-export const { useGetAllStoreQuery } = storeApi;
+export const { useGetAllStoreQuery, useGetStoreMutation } = storeApi;

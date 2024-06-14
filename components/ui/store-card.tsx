@@ -20,7 +20,7 @@ interface StoreCardProps {
 export default function StoreCard({ title, image,
     buttonClick }: StoreCardProps) {
     return (
-        <Card className="bg-white flex flex-col max-h-sm max-w-xs rounded-lg shadow-md hover:shadow-lg transition duration-300" onClick={buttonClick}>
+        <Card className="m-2 bg-white flex flex-col max-h-sm rounded-lg shadow-md hover:shadow-lg transition duration-300" onClick={buttonClick}>
 
             <img
                 src={'https://as2.ftcdn.net/v2/jpg/02/32/16/07/1000_F_232160763_FuTBWDd981tvYEJFXpFZtolm8l4ct0Nz.jpg'}

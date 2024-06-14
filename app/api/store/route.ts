@@ -17,3 +17,18 @@ export async function GET() {
     }
 
 }
+export async function POST(req: NextRequest) {
+    try {
+        connectDB()
+        const { merchantId } = await req.json();
+        const store = await User.findOne({ _id: merchantId }).select("-password").select('-role').select('-email').select('-provider')
+        if (!store) {
+            return NextResponse.json({ message: 'No store found' }, { status: 200 })
+        }
+        return NextResponse.json({ store: store }, { status: 200 })
+
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+}
