@@ -24,7 +24,7 @@ export default function Store({ searchParams: { storeId } }: StoreProps) {
   useEffect(() => {
     getProduct({ merchantId: storeId })
     getStore({ merchantId: storeId })
-  }, [])
+  }, [storeId])
   const product = useMemo(
     () =>
       isFetchingProduct ? Array(productData?.product?.length || 10).fill({}) : productData?.product,
