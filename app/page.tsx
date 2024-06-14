@@ -19,9 +19,6 @@ export default function Home() {
   const { data: session } = useSession()
   const { data, isLoading } = useGetAllStoreQuery({})
   const router = useRouter()
-  useEffect(() => {
-    console.log(data)
-  })
 
   return (
     <div className='w-full flex flex-col justify-center p-2 container '>
