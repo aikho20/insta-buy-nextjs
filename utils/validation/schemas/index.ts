@@ -24,6 +24,7 @@ export const PasswordUpdateSchema = z.object({
 })
 
 export const ProductSchema = z.object({
+  _id: z.string().optional(),
   images: z.array(z.string()).min(1, { message: 'Images are required' }),
   category: z.string().min(1, { message: 'Category is required' }),
   productName: z.string().min(1, { message: 'Product name is required' }),

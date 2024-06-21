@@ -16,7 +16,6 @@ import { useRouter } from 'next/navigation'
 import { Input } from '@/components/ui/input'
 
 export default function Home() {
-  const { data: session } = useSession()
   const { data, isLoading } = useGetAllStoreQuery({})
   const router = useRouter()
 

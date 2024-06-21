@@ -8,29 +8,77 @@ import {
 } from '@/components/ui/card'
 import { Button } from './button'
 import { Skeleton } from './skeleton'
-import { Minus, MinusCircle, Plus, PlusCircle } from 'lucide-react'
+import { DeleteIcon, Minus, MinusCircle, Plus, PlusCircle, Trash, Trash2Icon } from 'lucide-react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addItemCart, incrementItemCart, decmentItemCart } from '@/store/reducers/storeReducer'
+import { RootState } from '@/lib/config/store'
 
 interface ProductCardProps {
-  title?: string
+  _id: string
+  title: string
   discount?: string
   description?: string
-  price?: number
-  image?: string
+  price: number
+  storeId: string
+  image: string
   buttonLabel?: string
   isLoading?: boolean
+  value: number
   buttonClick?: () => void
 }
 
 export default function ProductCard({
+  _id,
   title,
   discount,
+  storeId,
   description,
   price,
   image,
-  buttonLabel,
   isLoading,
+  value,
   buttonClick,
 }: ProductCardProps) {
+  const dispatch = useDispatch()
+
+  const add_product_to_cart = async ({
+    _id,
+    title,
+    price,
+    image,
+    value,
+  }: {
+    _id: string
+    title: string
+    price: number
+    image: string
+    value: number
+  }) => {
+    await dispatch(
+      addItemCart({
+        _id,
+        title,
+        price,
+        image,
+        value: value + 1,
+      })
+    )
+  }
+  const increment_product_count = async ({ _id, value }: { _id: string; value: number }) => {
+    const data = await dispatch(
+      incrementItemCart({
+        _id,
+      })
+    )
+  }
+  const decrement_product_count = async ({ _id, value }: { _id: string; value: number }) => {
+    await dispatch(
+      decmentItemCart({
+        _id,
+      })
+    )
+  }
+
   return (
     <Card className='bg-white flex flex-col max-h-sm max-w-100 rounded-lg hover:shadow-lg transition duration-300 p-0 m-0'>
       <CardHeader className='relative bg-slate-100'>
@@ -40,28 +88,60 @@ export default function ProductCard({
           <img src={image} alt='Product Image' className='w-full h-[120px] bg-contain bg-center' />
         )}
 
-        {false ? (
-          <div className='flex flex-row shadow-md absolute bottom-3 p-2 bg-white left-2 right-2 gap-3 justify-center items-center rounded-md'>
-            <Plus className='h-6 w-6 text-gray-600' />
-            <p className='text-md text-gray-700'>0</p>
-            <Minus className='h-6 w-6 text-gray-600' />
+        {value > 0 ? (
+          <div className='flex flex-row-reverse  absolute bottom-2 left-0 right-0  items-center justify-center'>
+            <div className='rounded-md w-[100px] flex flex-row gap-2  p-2 items-center justify-center bg-white shadow-md'>
+              <Plus
+                className='h-5 w-5 text-gray-600 cursor-pointer'
+                onClick={() => increment_product_count({ _id, value })}
+              />
+              <p className='text-md text-gray-600'>{value}</p>
+              <>
+                {value <= 1 ? (
+                  <Trash2Icon
+                    className='h-5 w-5 text-red-500 cursor-pointer'
+                    onClick={() => decrement_product_count({ _id, value })}
+                  />
+                ) : (
+                  <Minus
+                    className='h-5 w-5 text-gray-600 cursor-pointer'
+                    onClick={() => decrement_product_count({ _id, value })}
+                  />
+                )}
+              </>
+            </div>
           </div>
         ) : (
-          <div className='flex flex-row shadow-md absolute bottom-3 p-2 bg-white right-2 gap-2 justify-center items-center rounded-full'>
-            <Plus className='h-6 w-6 text-gray-600' />
-          </div>
+          <>
+            {!isLoading && (
+              <div
+                className='flex flex-row shadow-md absolute bottom-3 p-2 bg-white right-2 gap-2 rounded-full'
+                onClick={() => add_product_to_cart({ _id, title, price, image, value })}
+              >
+                <Plus className='h-5 w-5 text-gray-600' />
+              </div>
+            )}
+          </>
         )}
       </CardHeader>
       <CardContent className='p-4'>
-        <CardTitle className='text-md font-semibold mb-2 truncate'>
-          {!isLoading ? title : <Skeleton className='w-full h-7' />}
-        </CardTitle>
-        <CardDescription className='text-gray-400 mb-4 truncate text-sm'>
-          {!isLoading ? description : <Skeleton className='w-full h-6' />}
-        </CardDescription>
-        <p className='text-gray-600 mb-2'>
-          {!isLoading ? `P${price}` : <Skeleton className='w-10 h-5' />}
-        </p>
+        {!isLoading ? (
+          <p className='text-md font-semibold mb-2 truncate'>{title} </p>
+        ) : (
+          <Skeleton className='w-full h-7 my-1' />
+        )}
+
+        {!isLoading ? (
+          <p className='text-gray-400 mb-4 truncate text-sm'>{description} </p>
+        ) : (
+          <Skeleton className='w-full h-6 my-1' />
+        )}
+
+        {!isLoading ? (
+          <p className='text-gray-600 my-1'>{`₱${price}`} </p>
+        ) : (
+          <Skeleton className='w-10 h-5' />
+        )}
       </CardContent>
     </Card>
   )

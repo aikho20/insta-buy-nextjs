@@ -7,8 +7,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     store: storeReducer,
   },
-
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({}).concat([apiSlice.middleware]),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({}).concat(apiSlice.middleware),
 })
 
 export type RootState = ReturnType<typeof store.getState>

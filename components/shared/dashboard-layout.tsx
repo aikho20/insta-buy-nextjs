@@ -19,7 +19,9 @@ export default function DashboardLayout({ children, toggle }: ProviderProps) {
             onClick={() => {
               router.push(items.route)
             }}
-            className={`p-2 text-sm ${pathname === items.route ? 'bg-slate-200 rounded' : ''} `}
+            className={`p-2 text-sm cursor-pointer ${
+              pathname === items.route ? 'bg-slate-200 rounded' : ''
+            } `}
           >
             {items.title}
           </div>

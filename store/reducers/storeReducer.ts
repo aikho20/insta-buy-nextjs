@@ -1,27 +1,55 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { RootState } from '@/lib/config/store'
+import { PayloadAction, createSelector, createSlice } from '@reduxjs/toolkit'
+
+export interface ProductItemProps {
+  _id: string
+  title: string
+  price: number
+  image: string
+  value: number
+}
+interface Cart {
+  cart: Array<ProductItemProps>
+}
+
+const initialState: Cart = {
+  cart: [],
+}
 
 const storeReducer = createSlice({
-  name: 'account',
-  initialState: {
-    cart: [] || {},
-  },
+  name: 'cart',
+  initialState,
   reducers: {
-    addItemCart: (state, action) => {
-      state.cart = action.payload
+    clearCart: (state) => {
+      state.cart = []
     },
-    decrementItemCart: (state, action) => {
-      state.cart = action.payload
+    setCartItems: (state, action: PayloadAction<Cart>) => {
+      state.cart = action.payload.cart
     },
-    incrementItemCart: (state, action) => {
-      state.cart = action.payload
+    addItemCart: (state, action: PayloadAction<ProductItemProps>) => {
+      state.cart.push(action.payload)
     },
-    removeItemCart: (state, action) => {
-      state.cart = action.payload
+    incrementItemCart: (state, action: PayloadAction<{ _id: string }>) => {
+      const item = state.cart.find((item) => item._id === action.payload._id)
+      if (item) {
+        item.value += 1
+      }
+    },
+    decmentItemCart: (state, action: PayloadAction<{ _id: string }>) => {
+      const item = state.cart.find((item) => item._id === action.payload._id)
+      if (item && item.value > 1) {
+        item.value -= 1
+      } else {
+        state.cart = state.cart.filter((item) => item._id !== action.payload._id)
+      }
     },
   },
 })
-
-export const { incrementItemCart, decrementItemCart, removeItemCart, addItemCart } =
+export const getStoreState = createSelector(
+  (state: RootState) => state,
+  ({ store }) => store
+)
+export const { addItemCart, incrementItemCart, decmentItemCart, setCartItems, clearCart } =
   storeReducer.actions
 
 export default storeReducer.reducer
